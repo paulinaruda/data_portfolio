@@ -1,0 +1,630 @@
+Q1: Bike category sales performance by region
+
+-- (Q1_variant1_bike_sales_by_region.csv)
+SELECT  
+DATEPART(year, soh.OrderDate) AS year_of_sale,
+--st.[Group] AS territory_group,
+st.Name as sales_teritory_name,
+pc.[Name] AS product_category_name,
+--soh.OnlineOrderFlag
+--soh.ShipMethodID,
+COUNT(soh.SalesOrderID) AS number_of_total_sales,
+SUM(soh.SubTotal) AS untaxed_total_sales
+--soh.TaxAmt,
+--soh.Freight,
+--soh.TotalDue,
+--pc.Name as product_category
+FROM Sales.SalesOrderHeader soh
+LEFT JOIN Sales.SalesOrderDetail sod
+ON sod.SalesOrderID = soh.SalesOrderID
+LEFT JOIN Production.Product pp
+ON pp.ProductID = sod.ProductID
+LEFT JOIN Production.ProductSubcategory ps
+ON ps.ProductSubcategoryID = pp.ProductSubcategoryID
+LEFT JOIN Production.ProductCategory pc
+ON pc.ProductCategoryID = ps.ProductCategoryID
+LEFT JOIN Sales.SalesTerritory st
+ON st.TerritoryID = soh.TerritoryID
+WHERE pc.[Name] = 'Bikes' --- Bikes category filter
+GROUP  BY  
+DATEPART(year, soh.OrderDate),
+--st.[Group],
+st.Name,
+pc.[Name] 
+ORDER BY 
+DATEPART(year, soh.OrderDate) ASC,
+--st.[Group] ASC,
+st.Name ASC,
+pc.[Name] ASC
+
+
+Comparing only the first 5 months of sales in 2012 – 2014 (as in 2011 we didn’t have comparable sales)
+
+SELECT  
+DATEPART(year, soh.OrderDate) AS year_of_sale,
+DATEPART(month, soh.OrderDate) AS month_of_sale,
+--st.[Group] AS territory_group,
+st.Name as sales_teritory_name,
+pc.[Name] AS product_category_name,
+--soh.OnlineOrderFlag
+--soh.ShipMethodID,
+COUNT(soh.SalesOrderID) AS number_of_total_sales,
+SUM(soh.SubTotal) AS untaxed_total_sales
+--soh.TaxAmt,
+--soh.Freight,
+--soh.TotalDue,
+--pc.Name as product_category
+FROM Sales.SalesOrderHeader soh
+LEFT JOIN Sales.SalesOrderDetail sod
+ON sod.SalesOrderID = soh.SalesOrderID
+LEFT JOIN Production.Product pp
+ON pp.ProductID = sod.ProductID
+LEFT JOIN Production.ProductSubcategory ps
+ON ps.ProductSubcategoryID = pp.ProductSubcategoryID
+LEFT JOIN Production.ProductCategory pc
+ON pc.ProductCategoryID = ps.ProductCategoryID
+LEFT JOIN Sales.SalesTerritory st
+ON st.TerritoryID = soh.TerritoryID
+WHERE pc.[Name] = 'Bikes' --- Bikes category filter
+GROUP  BY  
+DATEPART(year, soh.OrderDate),
+DATEPART(month, soh.OrderDate),
+--st.[Group],
+st.Name,
+pc.[Name] 
+ORDER BY 
+DATEPART(year, soh.OrderDate) ASC,
+DATEPART(month, soh.OrderDate) ASC,
+--st.[Group] ASC,
+st.Name ASC,
+pc.[Name] ASC
+
+
+--- Q1 --- Bikes product category sales by region
+-- (Q1_variant2_bike_sales_by_region.csv)
+
+Comparing whole years to just 5 months of 2014
+SELECT  
+DATEPART(year, soh.OrderDate) AS year_of_sale,
+st.[Group] AS territory_group,
+--st.Name as sales_teritory_name,
+pc.[Name] AS product_category_name,
+--soh.OnlineOrderFlag
+--soh.ShipMethodID,
+COUNT(soh.SalesOrderID) AS number_of_total_sales,
+SUM(soh.SubTotal) AS untaxed_total_sales
+--soh.TaxAmt,
+--soh.Freight,
+--soh.TotalDue,
+--pc.Name as product_category
+FROM Sales.SalesOrderHeader soh
+LEFT JOIN Sales.SalesOrderDetail sod
+ON sod.SalesOrderID = soh.SalesOrderID
+LEFT JOIN Production.Product pp
+ON pp.ProductID = sod.ProductID
+LEFT JOIN Production.ProductSubcategory ps
+ON ps.ProductSubcategoryID = pp.ProductSubcategoryID
+LEFT JOIN Production.ProductCategory pc
+ON pc.ProductCategoryID = ps.ProductCategoryID
+LEFT JOIN Sales.SalesTerritory st
+ON st.TerritoryID = soh.TerritoryID
+WHERE pc.[Name] = 'Bikes' --- Bikes category filter
+AND DATEPART(month,soh.OrderDate) <= 5
+AND DATEPART(year,soh.OrderDate) > 2011
+GROUP  BY  
+DATEPART(year, soh.OrderDate),
+st.[Group],
+--st.Name,
+pc.[Name] 
+ORDER BY 
+DATEPART(year, soh.OrderDate) ASC,
+st.[Group] ASC,
+--st.Name ASC,
+pc.[Name] ASC
+
+Comparing only the first 5 months of sales in 2012 – 2014 (as in 2011 we didn’t have comparable sales)
+SELECT  
+DATEPART(year, soh.OrderDate) AS year_of_sale,
+DATEPART(month,soh.OrderDate) AS month_of_sale,
+st.[Group] AS territory_group,
+--st.Name as sales_teritory_name,
+pc.[Name] AS product_category_name,
+--soh.OnlineOrderFlag
+--soh.ShipMethodID,
+COUNT(soh.SalesOrderID) AS number_of_total_sales,
+SUM(soh.SubTotal) AS untaxed_total_sales
+--soh.TaxAmt,
+--soh.Freight,
+--soh.TotalDue,
+--pc.Name as product_category
+FROM Sales.SalesOrderHeader soh
+LEFT JOIN Sales.SalesOrderDetail sod
+ON sod.SalesOrderID = soh.SalesOrderID
+LEFT JOIN Production.Product pp
+ON pp.ProductID = sod.ProductID
+LEFT JOIN Production.ProductSubcategory ps
+ON ps.ProductSubcategoryID = pp.ProductSubcategoryID
+LEFT JOIN Production.ProductCategory pc
+ON pc.ProductCategoryID = ps.ProductCategoryID
+LEFT JOIN Sales.SalesTerritory st
+ON st.TerritoryID = soh.TerritoryID
+WHERE pc.[Name] = 'Bikes'--- Bikes category filter
+AND DATEPART(month,soh.OrderDate) <= 5
+AND DATEPART(year,soh.OrderDate) > 2011  ---- because in 2011 we started selling in May only
+GROUP  BY  
+DATEPART(year, soh.OrderDate),
+DATEPART(month,soh.OrderDate),
+st.[Group],
+--st.Name,
+pc.[Name] 
+ORDER BY 
+DATEPART(year, soh.OrderDate) ASC,
+DATEPART(month,soh.OrderDate) ASC,
+st.[Group] ASC,
+--st.Name ASC,
+pc.[Name] ASC
+
+
+Monthly and quarterly
+SELECT  st.[Group] AS territory_group,
+DATEPART(year, soh.OrderDate) AS year_of_sale,
+DATEPART(month, soh.OrderDate) AS month_of_sale,
+CASE WHEN DATEPART(month, soh.OrderDate) <= 3 THEN 1
+when DATEPART(month, soh.OrderDate) <= 6 THEN 2
+when DATEPART(month, soh.OrderDate) <= 9 THEN 3
+when DATEPART(month, soh.OrderDate) <= 12 THEN 4
+END AS quarter_number,
+COUNT(soh.SalesOrderID) AS number_of_total_sales,
+SUM(soh.SubTotal) AS untaxed_total_sales
+FROM Sales.SalesOrderHeader soh
+LEFT JOIN Sales.SalesOrderDetail sod
+ON sod.SalesOrderID = soh.SalesOrderID
+LEFT JOIN Production.Product pp
+ON pp.ProductID = sod.ProductID
+LEFT JOIN Production.ProductSubcategory ps
+ON ps.ProductSubcategoryID = pp.ProductSubcategoryID
+LEFT JOIN Production.ProductCategory pc
+ON pc.ProductCategoryID = ps.ProductCategoryID
+LEFT JOIN Sales.SalesTerritory st
+ON st.TerritoryID = soh.TerritoryID
+WHERE pc.[Name] = 'Bikes' --- Bikes category filter
+GROUP  BY  st.[Group],
+DATEPART(year, soh.OrderDate),
+DATEPART(month, soh.OrderDate),
+CASE WHEN DATEPART(month, soh.OrderDate) <= 3 THEN 1
+when DATEPART(month, soh.OrderDate) <= 6 THEN 2
+when DATEPART(month, soh.OrderDate) <= 9 THEN 3
+when DATEPART(month, soh.OrderDate) <= 12 THEN 4
+END
+ORDER BY st.[Group] ASC,
+DATEPART(year, soh.OrderDate) ASC,
+DATEPART(month, soh.OrderDate),
+CASE 
+WHEN DATEPART(month, soh.OrderDate) <= 3 THEN 1
+when DATEPART(month, soh.OrderDate) <= 6 THEN 2
+when DATEPART(month, soh.OrderDate) <= 9 THEN 3
+when DATEPART(month, soh.OrderDate) <= 12 THEN 4
+END ASC
+
+
+--- Q2: Profitability year on year
+Assumptions made (both for questions 2 and 3):
+1)	Because in years 2006 – 2011 we didn’t have any sales, I assumed the employee costs were just some data quality issues and while doing the YoY comparison I only compared years 2011 – 2014 (there were also no production costs and orders costs)
+Creating a table with employee earnings to get an employee cost
+drop table if exists HumanResources.Paulina_employee_pay_across_years
+select * into HumanResources.Paulina_employee_pay_across_years
+from (
+select a.BusinessEntityID AS BusinessEntityID,
+eph.Rate AS Rate, 
+a.StartDate AS StartDate,
+a.EndDate,
+x.start_date_counting_from_2011,
+x.new_end_date,
+CASE 
+WHEN x.new_end_date < '2011-01-01' THEN 0
+WHEN x.start_date_counting_from_2011 > '2011-12-31' THEN 0
+WHEN x.start_date_counting_from_2011 <= '2011-01-01'
+AND x.new_end_date < '2011-12-31' 
+	THEN DATEDIFF(day, '2011-01-01', x.new_end_date)/30
+WHEN x.start_date_counting_from_2011 <= '2011-01-01'
+AND x.new_end_date > '2011-12-31' 
+	THEN 12
+WHEN x.start_date_counting_from_2011 >= '2011-01-01'
+AND x.new_end_date > '2011-12-31' 
+	THEN DATEDIFF(day, x.start_date_counting_from_2011, '2011-12-31')/30
+WHEN x.start_date_counting_from_2011 >= '2011-01-01'
+AND x.new_end_date < '2011-12-31' 
+	THEN DATEDIFF(day, x.start_date_counting_from_2011, x.new_end_date)/30
+END 
+	as no_of_months_in_2011,
+
+CASE
+WHEN x.new_end_date < '2012-01-01' THEN 0
+WHEN x.start_date_counting_from_2011 > '2012-12-31' THEN 0
+WHEN x.start_date_counting_from_2011 <= '2012-01-01'
+AND x.new_end_date <= '2012-12-31' 
+	THEN DATEDIFF(day, '2012-01-01', x.new_end_date)/30
+WHEN x.start_date_counting_from_2011 <= '2012-01-01'
+AND x.new_end_date >= '2012-12-31' 
+	THEN 12
+WHEN x.start_date_counting_from_2011 >= '2012-01-01'
+AND x.new_end_date >= '2012-12-31' 
+	THEN DATEDIFF(day, x.start_date_counting_from_2011, '2012-12-31')/30
+WHEN x.start_date_counting_from_2011 >= '2012-01-01'
+AND x.new_end_date <= '2012-12-31' 
+	THEN DATEDIFF(day, x.start_date_counting_from_2011, x.new_end_date)/30
+END 
+	as no_of_months_in_2012,
+CASE
+WHEN x.new_end_date < '2013-01-01' THEN 0
+WHEN x.start_date_counting_from_2011 > '2013-12-31' THEN 0
+WHEN x.start_date_counting_from_2011 <= '2013-01-01'
+AND x.new_end_date <= '2013-12-31' 
+	THEN DATEDIFF(day, '2013-01-01', x.new_end_date)/30
+WHEN x.start_date_counting_from_2011 <= '2013-01-01'
+AND x.new_end_date >= '2013-12-31' 
+	THEN 12
+WHEN x.start_date_counting_from_2011 >= '2013-01-01'
+AND x.new_end_date >= '2013-12-31' 
+	THEN DATEDIFF(day, x.start_date_counting_from_2011, '2013-12-31')/30
+WHEN x.start_date_counting_from_2011 >= '2013-01-01'
+AND x.new_end_date <= '2013-12-31' 
+	THEN DATEDIFF(day, x.start_date_counting_from_2011, x.new_end_date)/30
+END 
+	as no_of_months_in_2013,
+CASE
+WHEN x.new_end_date < '2014-01-01' THEN 0
+WHEN x.start_date_counting_from_2011 > '2014-12-31' THEN 0
+WHEN x.start_date_counting_from_2011 <= '2014-01-01'
+AND x.new_end_date <= '2014-12-31' 
+	THEN DATEDIFF(day, '2014-01-01', x.new_end_date)/30
+WHEN x.start_date_counting_from_2011 <= '2014-01-01'
+AND x.new_end_date >= '2014-12-31' 
+	THEN 12
+WHEN x.start_date_counting_from_2011 >= '2014-01-01'
+AND x.new_end_date >= '2014-12-31' 
+	THEN DATEDIFF(day, x.start_date_counting_from_2011, '2014-12-31')/30
+WHEN x.start_date_counting_from_2011 >= '2014-01-01'
+AND x.new_end_date <= '2014-12-31' 
+	THEN DATEDIFF(day, x.start_date_counting_from_2011, x.new_end_date)/30
+END 
+	as no_of_months_in_2014
+FROM HumanResources.EmployeeDepartmentHistory a
+JOIN(select BusinessEntityID, StartDate,
+
+CASE 
+WHEN StartDate <= '2011-01-01' 
+	THEN '2011-01-01' 
+WHEN StartDate > '2011-01-01' 
+	Then StartDate
+END 
+	AS start_date_counting_from_2011,
+CASE 
+WHEN EndDate IS NOT NULL 
+	THEN EndDate
+WHEN EndDate IS NULL 
+	THEN '2014-06-30'
+END 
+as new_end_date
+
+from  HumanResources.EmployeeDepartmentHistory) as x
+on x.BusinessEntityID = a.BusinessEntityID AND x.StartDate = a.StartDate
+JOIN HumanResources.Employee as e
+ON e.BusinessEntityID = a.BusinessEntityID
+join HumanResources.EmployeePayHistory as eph
+on eph.BusinessEntityID = a.BusinessEntityID) as a;
+
+Selecting the employee pay across years 
+
+
+SELECT * from
+(select 
+SUM(Rate * no_of_months_in_2011 * 160) AS total_employee_pay_2011,
+SUM(Rate * no_of_months_in_2012 * 160) AS total_employee_pay_2012,
+SUM(Rate * no_of_months_in_2013 * 160) AS total_employee_pay_2013,
+SUM(Rate * no_of_months_in_2014 * 160) AS total_employee_pay_2014
+from HumanResources.Paulina_employee_pay_across_years ec) a
+
+
+Profitability (sales, production costs, orders costs) – without the employee costs
+
+USE AdventureWorks2014
+SELECT
+sod.year_of_sale, 
+sod.total_sales,
+b.total_production_costs,
+c.total_orders_costs,
+sod.total_sales - b.total_production_costs - c.total_orders_costs AS total_profit
+FROM(SELECT 
+DATEPART(year, z.OrderDate) AS year_of_sale, 
+SUM(x.LineTotal) AS total_sales
+FROM Sales.SalesOrderDetail x
+JOIN Sales.SalesOrderHeader z
+on x.SalesOrderID = z.salesORderID
+GROUP BY DATEPART(year, z.OrderDate)
+) AS sod
+JOIN(select
+DATEPART(year, ActualEndDate) AS year_of_production, 
+SUM(ActualCost) AS total_production_costs
+from Production.WorkOrderRouting
+GROUP BY DATEPART(year, ActualEndDate)) AS b
+ON b.year_of_production = sod.year_of_sale
+INNER JOIN(select
+DATEPART(year, DueDate) AS year_of_order, 
+SUM(LineTotal) AS total_orders_costs
+from Purchasing.PurchaseOrderDetail
+GROUP BY DATEPART(year, DueDate)) AS c
+ON c.year_of_order = sod.year_of_sale
+ORDER BY sod.year_of_sale ASC
+
+
+Comparison of the first 6 months of the year
+
+SELECT
+sod.year_of_sale,
+sod.month_of_sale,
+sod.total_sales,
+b.total_production_costs,
+c.total_orders_costs,
+sod.total_sales - b.total_production_costs - c.total_orders_costs AS total_profit
+FROM(SELECT DATEPART(year, z.OrderDate) AS year_of_sale, 
+DATEPART(month, z.OrderDate) AS month_of_sale, 
+SUM(x.LineTotal) AS total_sales
+FROM Sales.SalesOrderDetail x
+JOIN Sales.SalesOrderHeader z
+on x.SalesOrderID = z.salesORderID
+WHERE DATEPART(month, z.OrderDate) <= 6
+AND DATEPART(year, z.OrderDate) > 2011
+GROUP BY DATEPART(year, z.OrderDate),
+DATEPART(month, z.OrderDate)) AS sod
+LEFT JOIN(select DATEPART(year, ActualEndDate) AS year_of_production,
+DATEPART(month, ActualEndDate) AS month_of_production, 
+SUM(ActualCost) AS total_production_costs
+from Production.WorkOrderRouting
+WHERE DATEPART(year, ActualEndDate) > 2011
+AND DATEPART(month, ActualEndDate) <= 6
+GROUP BY DATEPART(year, ActualEndDate),
+DATEPART(month, ActualEndDate)) AS b
+ON b.year_of_production = sod.year_of_sale AND b.month_of_production = sod.month_of_sale
+LEFT JOIN(select DATEPART(year, DueDate) AS year_of_order, 
+DATEPART(month, DueDate) AS month_of_order, 
+SUM(LineTotal) AS total_orders_costs
+from Purchasing.PurchaseOrderDetail
+WHERE DATEPART(year, DueDate) > 2011
+AND DATEPART(month, DueDate) <= 6
+GROUP BY DATEPART(year, DueDate),
+DATEPART(month, DueDate)) AS c
+ON c.year_of_order = sod.year_of_sale AND c.month_of_order = sod.month_of_sale
+where sod.month_of_sale <= 6
+and sod.year_of_sale > 2011
+ORDER BY sod.year_of_sale ASC,
+sod.month_of_sale
+
+First 6 months
+
+SELECT
+sod.year_of_sale,
+sod.total_sales,
+b.total_production_costs,
+c.total_orders_costs,
+sod.total_sales - b.total_production_costs - c.total_orders_costs AS total_profit
+FROM(SELECT 
+DATEPART(year, z.OrderDate) AS year_of_sale,
+DATEPART(month, z.OrderDate) AS month_of_sale, 
+SUM(x.LineTotal) AS total_sales
+FROM Sales.SalesOrderDetail x
+JOIN Sales.SalesOrderHeader z
+on x.SalesOrderID = z.salesORderID
+WHERE DATEPART(month, z.OrderDate) <= 6
+AND DATEPART(year, z.OrderDate) > 2011
+GROUP BY DATEPART(year, z.OrderDate),
+DATEPART(month, z.OrderDate) AS sod
+LEFT JOIN(select DATEPART(year, ActualEndDate) AS year_of_production, 
+DATEPART(month, ActualEndDate) AS month_of_production, 
+SUM(ActualCost) AS total_production_costs
+from Production.WorkOrderRouting
+WHERE DATEPART(year, ActualEndDate) > 2011
+AND DATEPART(month, ActualEndDate) <= 6
+GROUP BY DATEPART(year, ActualEndDate),
+DATEPART(month, ActualEndDate) AS b
+ON b.year_of_production = sod.year_of_sale 
+AND b.month_of_production = sod.month_of_sale
+LEFT JOIN(select DATEPART(year, DueDate) AS year_of_order,
+DATEPART(month, DueDate) AS month_of_order, 
+SUM(LineTotal) AS total_orders_costs
+from Purchasing.PurchaseOrderDetail
+WHERE DATEPART(year, DueDate) > 2011
+AND DATEPART(month, DueDate) <= 6
+GROUP BY DATEPART(year, DueDate),
+DATEPART(month, DueDate)) AS c
+ON c.year_of_order = sod.year_of_sale AND c.month_of_order = sod.month_of_sale
+where sod.month_of_sale <= 6
+and sod.year_of_sale > 2011
+ORDER BY sod.year_of_sale ASC
+
+
+--- Q3: Profitability this year against last year figures
+
+Profitability (sales, production costs, orders costs) – without the employee costs
+
+USE AdventureWorks2014
+SELECT
+sod.year_of_sale, 
+sod.total_sales,
+b.total_production_costs,
+c.total_orders_costs,
+sod.total_sales - b.total_production_costs - c.total_orders_costs AS total_profit
+FROM(SELECT 
+DATEPART(year, z.OrderDate) AS year_of_sale, 
+SUM(x.LineTotal) AS total_sales
+FROM Sales.SalesOrderDetail x
+JOIN Sales.SalesOrderHeader z
+on x.SalesOrderID = z.salesORderID
+GROUP BY DATEPART(year, z.OrderDate)
+) AS sod
+JOIN(select
+DATEPART(year, ActualEndDate) AS year_of_production, 
+SUM(ActualCost) AS total_production_costs
+from Production.WorkOrderRouting
+GROUP BY DATEPART(year, ActualEndDate)) AS b
+ON b.year_of_production = sod.year_of_sale
+INNER JOIN(select
+DATEPART(year, DueDate) AS year_of_order, 
+SUM(LineTotal) AS total_orders_costs
+from Purchasing.PurchaseOrderDetail
+GROUP BY DATEPART(year, DueDate)) AS c
+ON c.year_of_order = sod.year_of_sale
+WHERE year_of_sale >= 2013
+ORDER BY sod.year_of_sale ASC
+
+Selecting the employee pay across years 
+SELECT * from
+(select 
+SUM(Rate * no_of_months_in_2013 * 160) AS total_employee_pay_2013,
+SUM(Rate * no_of_months_in_2014 * 160) AS total_employee_pay_2014
+from HumanResources.Paulina_employee_pay_across_years ec) a
+
+A deeper look into order sales
+
+select
+DATEPART(year, DueDate) AS year_of_order, 
+DATEPART(month, DueDate) AS month_of_order, 
+SUM(LineTotal) AS total_orders_costs
+from Purchasing.PurchaseOrderDetail
+where DATEPART(year, DueDate) > 2012
+GROUP BY DATEPART(year, DueDate),
+DATEPART(month, DueDate)
+ORDER BY DATEPART(year, DueDate) ASC, 
+DATEPART(month, DueDate) ASC
+
+
+
+--- Q4: Sales breakdown by product subcategory
+
+Sales in subcategories 
+
+SELECT DATEPART(year, soh.OrderDate) AS year_of_sale,
+pc.[Name] AS product_category_name,
+ps.[Name] AS product_subcategory_name,
+--st.[Group] AS territory_group,
+--st.Name as sales_teritory_name,
+--soh.OnlineOrderFlag
+--soh.ShipMethodID,
+COUNT(soh.SalesOrderID) AS number_of_total_sales,
+SUM(soh.SubTotal) AS untaxed_total_sales
+--soh.TaxAmt,
+--soh.Freight,
+--soh.TotalDue,
+--pc.Name as product_category
+FROM Sales.SalesOrderHeader soh
+LEFT JOIN Sales.SalesOrderDetail sod
+ON sod.SalesOrderID = soh.SalesOrderID
+LEFT JOIN Production.Product pp
+ON pp.ProductID = sod.ProductID
+LEFT JOIN Production.ProductSubcategory ps
+ON ps.ProductSubcategoryID = pp.ProductSubcategoryID
+LEFT JOIN Production.ProductCategory pc
+ON pc.ProductCategoryID = ps.ProductCategoryID
+LEFT JOIN Sales.SalesTerritory st
+ON st.TerritoryID = soh.TerritoryID
+GROUP  BY  DATEPART(year, soh.OrderDate),
+pc.[Name],
+ps.[Name]
+--st.[Group],
+--st.Name,
+ORDER BY 
+DATEPART(year, soh.OrderDate) ASC,
+pc.[Name] ASC,
+ps.[Name] ASC
+--st.[Group] ASC,
+--st.Name ASC
+
+
+Sales across categories
+
+SELECT DATEPART(year, soh.OrderDate) AS year_of_sale,
+pc.[Name] AS product_category_name,
+COUNT(soh.SalesOrderID) AS number_of_total_sales,
+SUM(soh.SubTotal) AS untaxed_total_sales
+FROM Sales.SalesOrderHeader soh
+LEFT JOIN Sales.SalesOrderDetail sod
+ON sod.SalesOrderID = soh.SalesOrderID
+LEFT JOIN Production.Product pp
+ON pp.ProductID = sod.ProductID
+LEFT JOIN Production.ProductSubcategory ps
+ON ps.ProductSubcategoryID = pp.ProductSubcategoryID
+LEFT JOIN Production.ProductCategory pc
+ON pc.ProductCategoryID = ps.ProductCategoryID
+LEFT JOIN Sales.SalesTerritory st
+ON st.TerritoryID = soh.TerritoryID
+GROUP  BY  DATEPART(year, soh.OrderDate),
+pc.[Name]
+ORDER BY DATEPART(year, soh.OrderDate) ASC,
+pc.[Name] ASC
+
+
+--- Q5: Additional suggestions
+
+Breakdown of sales – categories
+SELECT 
+pc.[Name] AS product_category_name,
+COUNT(soh.SalesOrderID) AS number_of_total_sales,
+SUM(soh.SubTotal) AS untaxed_total_sales
+FROM Sales.SalesOrderHeader soh
+LEFT JOIN Sales.SalesOrderDetail sod
+ON sod.SalesOrderID = soh.SalesOrderID
+LEFT JOIN Production.Product pp
+ON pp.ProductID = sod.ProductID
+LEFT JOIN Production.ProductSubcategory ps
+ON ps.ProductSubcategoryID = pp.ProductSubcategoryID
+LEFT JOIN Production.ProductCategory pc
+ON pc.ProductCategoryID = ps.ProductCategoryID
+LEFT JOIN Sales.SalesTerritory st
+ON st.TerritoryID = soh.TerritoryID
+GROUP  BY 
+pc.[Name]
+ORDER BY pc.[Name] ASC
+
+
+
+A deeper look into order sales
+
+select
+DATEPART(year, DueDate) AS year_of_order, 
+DATEPART(month, DueDate) AS month_of_order, 
+SUM(LineTotal) AS total_orders_costs
+from Purchasing.PurchaseOrderDetail
+where DATEPART(year, DueDate) > 2012
+GROUP BY DATEPART(year, DueDate),
+DATEPART(month, DueDate)
+ORDER BY DATEPART(year, DueDate) ASC, 
+DATEPART(month, DueDate) ASC
+
+
+No bike sales in month 6 in 2014
+
+SELECT 
+DATEPART(year, z.OrderDate) AS year_of_sale, 
+DATEPART(month, z.OrderDate) AS month_of_sale, 
+SUM(x.LineTotal) AS total_sales
+FROM Sales.SalesOrderDetail x
+JOIN Sales.SalesOrderHeader z
+on x.SalesOrderID = z.salesORderID
+LEFT JOIN Production.Product pp
+ON pp.ProductID = x.ProductID
+LEFT JOIN Production.ProductSubcategory ps
+ON ps.ProductSubcategoryID = pp.ProductSubcategoryID
+LEFT JOIN Production.ProductCategory pc
+ON pc.ProductCategoryID = ps.ProductCategoryID
+WHERE DATEPART(month, z.OrderDate) <= 6
+AND DATEPART(year, z.OrderDate) > 2011
+AND pc.[Name] = 'Bikes' 
+GROUP BY DATEPART(year, z.OrderDate),
+DATEPART(month, z.OrderDate)
+Order BY DATEPART(year, z.OrderDate) ASC,
+DATEPART(month, z.OrderDate) ASC
+
+
+There is also a lot of missing data about the location of products with product ID > 600
+
+select * from production.ProductInventory

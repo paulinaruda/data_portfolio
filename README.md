@@ -16,7 +16,7 @@ While on my apprenticeship in data science team I was an analyst of the performa
 I introduced and productionalised Jenkins tool usage for everyday automation of SQL queries that were failing in Hadoop environment. This helped the company save hours of manual querying and reduced the time to query and made it possible for a dashboard automation (Python + SQL). 
 #### Health project
 ##### Products labelling with a tree structure
-I labeled 15 milions of products own brand based on their ingredients using an automated tree structure, that made it possible to see which products certain types of ingredients and made it possible to assign them labels based on these ingredients. I managed to save hundreds of hours of manual labeling to the company and suggested changes to make this approach futureproof (Python + SQL).
+I labeled 15 milions of products own brand based on their ingredients using an automated tree structure, that made it possible to see which products contain certain types of ingredients and made it possible to assign them labels based on these ingredients. I managed to save hundreds of hours of manual labeling to the company and suggested changes to make this approach futureproof (Python + SQL).
 ##### Loyal customers assesment
 I produced a KNN algorythm that assigned customers to different levels of brand loyalty based on their shopping data. This provided the opportunity for more personalised add tailoring (Python). This was very similar to the project in my portfolio for diabetes prediction.
 #### Floorplanning project

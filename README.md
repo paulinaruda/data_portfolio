@@ -28,8 +28,6 @@ I produced a dashboard that informed internal and external stakeholders about th
 I implemented a centralised automated solution to labeling over 40k discount codes that allowed for better data analysis. The process included involvement of a team of 10 people and overlooking their work. 
 ####  Route to 12month subscriptions (Symprove)
 I developed a dashboard that informed the management about the way that the customers in a biggest CLTV subscription type came to the company. I answered questions such as what was the customer journey, how many times did they purchase other products, what promotion did they join on, where are they from etc. which improved their knowledge about the customer acquisition journey. 
-####  Marketing dashboard automated solution (Symprove)
-Together with marketing team I developed a solution based on the 
 <br><br>
 
 ## The projects on my portfolio
